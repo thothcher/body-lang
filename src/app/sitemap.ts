@@ -3,6 +3,8 @@ import { CHAPTERS } from "@/lib/content/chapters";
 import { TEST_TOPICS } from "@/lib/content/quiz";
 import { SITE } from "@/lib/seo";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
