@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# სხეულის ენა — Body Language
 
-## Getting Started
+ინტერაქტიული ქართული სასწავლო პლატფორმა სხეულის ენაზე, აგებული **ალან პიზის წიგნზე
+„სხეულის ენა“** (ქართული თარგმანი, `516501829-311797400-ალან-პიზი-სხეულის-ენა.pdf`).
 
-First, run the development server:
+## რა არის შიგნით
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| ნაწილი | მისამართი | აღწერა |
+| --- | --- | --- |
+| თავები | `/chapters`, `/chapters/[slug]` | 14 თავი: სექციები, ილუსტრაციები, „დასამახსოვრებელი ბირთვი“, შეჯამება და მინი-ტესტი |
+| ჟესტების ბიბლიოთეკა | `/chapters` (ქვედა ნაწილი) | 67 ჟესტი, ფილტრი სხეულის ნაწილისა და ტონის მიხედვით, შენახვა |
+| ტესტები | `/test`, `/test/[topic]` | ზოგადი, თემატური (ხელები, სახე, თვალები, მკლავები, ფეხები, თავი) და თითო თავზე |
+| თამაშები | `/games/guess`, `/memory`, `/connections`, `/decode` | გამოცნობა ტაიმერით, მეხსიერების ბანქო, NYT-ის სტილის „კავშირები“, სცენის გაშიფვრა |
+| 3D სტუდია | `/studio` | ცოცხალი 3D ავატარი — ხელები, ფეხები, თავი, მზერა, პოზა, ტანსაცმელი + რეალურ დროში ინტერპრეტაცია |
+| ადამიანის წაკითხვა | `/reader` | ინტერაქტიული ფიგურა 6 ზონით და აქსესუარებით (სათვალე, საათი, ბეჭედი, საყურე, ჩანთა) |
+| პროგრესი | `/progress` | წაკითხული თავები, ტესტების შედეგები, თამაშების რეკორდები, შენახული ჟესტები |
+
+## ტექნოლოგიები
+
+- **Next.js 16** (App Router, Turbopack) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** — დიზაინის ტოკენები `src/app/globals.css`-ში (`@theme`)
+- **three.js / @react-three/fiber / drei** — 3D ავატარი
+- **next/font** — Noto Sans/Serif Georgian, თვით-ჰოსტირებული
+
+გარე გრაფიკული ფაილები არ გამოიყენება: **ყველა ილუსტრაცია პარამეტრული SVG-ია**
+(`src/components/figures/`), ხოლო 3D მოდელი პროცედურულად აიგება პრიმიტივებისგან.
+
+## სტრუქტურა
+
+```
+src/
+├─ app/                    # მარშრუტები, sitemap, robots, manifest
+├─ components/
+│  ├─ figures/             # BodyFigure, SeatedFigure, HandSign, FaceSignal, Diagrams
+│  │  └─ poses.ts          # ყველა პოზის კოორდინატები
+│  ├─ three/               # Avatar, StudioScene, rig.ts (3D პოზების პრესეტები)
+│  ├─ games/ quiz/ reader/ studio/ progress/
+│  ├─ layout/              # Header, Footer, CustomCursor, SearchDialog, ThemeToggle
+│  ├─ motion/              # RevealObserver (საკუთარი AOS), Parallax
+│  └─ ui/                  # Primitives, GestureCard, ChapterCard, ChapterBrowser
+└─ lib/
+   ├─ content/             # chapters.ts, gestures.ts, quiz.ts, games.ts
+   ├─ progress.tsx         # localStorage-ის კონტექსტი
+   ├─ reading.ts           # 3D სტუდიის ინტერპრეტაციის ძრავა
+   └─ seo.tsx              # JSON-LD დამხმარეები
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## გაშვება
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run build && npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### გარემოს ცვლადი
 
-## Learn More
+```
+NEXT_PUBLIC_SITE_URL=https://your-domain.tld
+```
 
-To learn more about Next.js, take a look at the following resources:
+გამოიყენება canonical URL-ებში, `sitemap.xml`-სა და `robots.txt`-ში. თუ არ არის
+მითითებული, გამოიყენება placeholder `src/lib/seo.tsx`-დან.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## შენიშვნები
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **მონაცემები** — პროგრესი, ტესტების შედეგები და შენახული ჟესტები ინახება მხოლოდ
+  `localStorage`-ში (`sxeulis-ena:v1`). სერვერზე არაფერი იგზავნება.
+- **წვდომადობა** — `prefers-reduced-motion` გამორთავს ყველა ანიმაციას; კურსორი
+  მხოლოდ მაუსიან მოწყობილობებზე ირთვება; ყველა ინტერაქტიულ ელემენტს აქვს
+  ხილული ფოკუსი და ARIA-ეტიკეტი.
+- **SEO** — თითოეულ გვერდს აქვს საკუთარი metadata, canonical და JSON-LD
+  (`Course`, `Article`, `BreadcrumbList`, `FAQPage`).
+- მასალა საგანმანათლებლო დანიშნულებისაა და ეყრდნობა ალან პიზის წიგნს.
