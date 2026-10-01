@@ -1,22 +1,21 @@
 name: Deploy to GitHub Pages
 
+# ბილდს აქვეყნებს `gh-pages` ბრანჩზე; GitHub Pages იქიდან ემსახურება.
+# იგივეა, რაც ლოკალურად `npm run deploy`.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# ერთდროულად მხოლოდ ერთი გამოქვეყნება
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -26,34 +25,11 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v6
-
       - run: npm ci
 
-      - name: Build static export
-        run: npx next build
+      - name: Build and publish to gh-pages
+        run: npm run deploy
         env:
-          GITHUB_PAGES: "true"
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
-          NEXT_TELEMETRY_DISABLED: "1"
-
-      # `_next` საქაღალდე Jekyll-მა არ უნდა გამოტოვოს
-      - run: touch out/.nojekyll
-
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v5
+          DEPLOY_REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com

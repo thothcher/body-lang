@@ -62,6 +62,18 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.tld
 გამოიყენება canonical URL-ებში, `sitemap.xml`-სა და `robots.txt`-ში. თუ არ არის
 მითითებული, გამოიყენება placeholder `src/lib/seo.tsx`-დან.
 
+## GitHub Pages
+
+საიტი: **https://thothcher.github.io/body-lang/**
+
+```bash
+npm run deploy     # სტატიკური ექსპორტი → gh-pages ბრანჩი
+```
+
+`scripts/deploy-pages.mjs` აგებს საიტს `/body-lang` ქვე-მისამართისთვის და აქვეყნებს
+`gh-pages` ბრანჩზე, საიდანაც GitHub Pages ემსახურება. `main`-ზე push-ისას იგივეს
+ავტომატურად აკეთებს GitHub Actions (`.github/workflows/deploy-pages.yml`).
+
 ## შენიშვნები
 
 - **მონაცემები** — პროგრესი, ტესტების შედეგები და შენახული ჟესტები ინახება მხოლოდ
