@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://thothcher.github.io/body-lang
+Sitemap: https://thothcher.github.io/body-lang/sitemap.xml
