@@ -242,6 +242,32 @@ export const SIGNALS: Record<string, SignalInfo> = {
     open: -0.1, dominance: 0.4, engagement: 0, tension: 0.2,
     chapter: "garegnoba",
   },
+
+  /* --- გარემო --- */
+  "ankle-lock": {
+    label: "ჩაკეტილი ტერფები",
+    reading: "ტერფები სკამის ქვეშ ჩაკეტილი — ადამიანი ემოციას ან ნეგატიურ რეაქციას იკავებს.",
+    open: -0.5, dominance: -0.3, engagement: -0.2, tension: 0.7,
+    chapter: "fexebi",
+  },
+  seated: {
+    label: "ზის სკამზე",
+    reading: "ჯდომისას ქვედა სხეული ყველაზე გულწრფელია — ფეხებს ნაკლებად ვაკონტროლებთ, ვიდრე სახეს.",
+    open: 0, dominance: -0.1, engagement: 0, tension: 0,
+    chapter: "fexebi",
+  },
+  "desk-barrier": {
+    label: "მაგიდა შუაში",
+    reading: "მაგიდა ბარიერია და ტერიტორიაც. პირისპირ დაჯდომა კონკურენციას ბადებს — კუთხეში დაჯდომა კი თანამშრომლობას.",
+    open: -0.3, dominance: 0.3, engagement: 0, tension: 0.2,
+    chapter: "sivrce",
+  },
+  podium: {
+    label: "ტრიბუნის უკან",
+    reading: "ტრიბუნა სხეულის ორ მესამედს მალავს — აუდიტორია ნაკლებად გენდობა. გამოდი მის გვერდით.",
+    open: -0.4, dominance: 0.4, engagement: 0.1, tension: 0.2,
+    chapter: "sivrce",
+  },
 };
 
 export interface Axis {

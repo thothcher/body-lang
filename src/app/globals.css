@@ -205,7 +205,8 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
   line-height: 1.65;
-  overflow-x: hidden;
+  /* clip, not hidden — hidden would turn body into a scroller and break position: sticky */
+  overflow-x: clip;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -397,6 +398,7 @@ html {
   }
 }
 
+@layer components {
 /* --- surfaces ----------------------------------------------------- */
 
 .card {
@@ -509,6 +511,7 @@ html {
   background: var(--fg);
   border-color: var(--fg);
   color: var(--bg);
+}
 }
 
 .grain::before {

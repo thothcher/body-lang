@@ -179,7 +179,12 @@ export interface LegPreset {
   b: LegPose;
   hipY?: number;
   signal: string;
+  /** იგივე ფეხები სკამზე ჯდომისას */
+  seated: { label: string; hint: string; a: LegPose; b: LegPose; signal?: string };
 }
+
+/* ჯდომისას ბარძაყი თითქმის ჰორიზონტალურია, წვივი — ვერტიკალური */
+const SIT = 1.45;
 
 export const LEG_PRESETS: LegPreset[] = [
   {
@@ -189,6 +194,12 @@ export const LEG_PRESETS: LegPreset[] = [
     a: { thigh: { x: 0, z: -0.03 }, shin: { x: 0.03 } },
     b: { thigh: { x: 0, z: 0.03 }, shin: { x: 0.03 } },
     signal: "legs-neutral",
+    seated: {
+      label: "ნეიტრალური",
+      hint: "ორივე ტერფი იატაკზე",
+      a: { thigh: { x: -SIT, z: -0.05 }, shin: { x: SIT } },
+      b: { thigh: { x: -SIT, z: 0.05 }, shin: { x: SIT } },
+    },
   },
   {
     id: "open",
@@ -197,6 +208,12 @@ export const LEG_PRESETS: LegPreset[] = [
     a: { thigh: { x: 0, z: -0.14 }, shin: { x: 0.05 } },
     b: { thigh: { x: 0, z: 0.14 }, shin: { x: 0.05 } },
     signal: "open-stance",
+    seated: {
+      label: "მუხლები გაშლილი",
+      hint: "ტერიტორიის დაკავება",
+      a: { thigh: { x: -SIT, z: -0.3 }, shin: { x: SIT - 0.05 } },
+      b: { thigh: { x: -SIT, z: 0.3 }, shin: { x: SIT - 0.05 } },
+    },
   },
   {
     id: "closed",
@@ -205,6 +222,12 @@ export const LEG_PRESETS: LegPreset[] = [
     a: { thigh: { x: 0, z: 0.05 }, shin: { x: 0.02 } },
     b: { thigh: { x: 0, z: -0.05 }, shin: { x: 0.02 } },
     signal: "legs-closed",
+    seated: {
+      label: "მუხლები ერთად",
+      hint: "ოფიციალურობა, სიფრთხილე",
+      a: { thigh: { x: -SIT, z: 0.035 }, shin: { x: SIT + 0.08 } },
+      b: { thigh: { x: -SIT, z: -0.035 }, shin: { x: SIT + 0.08 } },
+    },
   },
   {
     id: "crossed",
@@ -213,6 +236,12 @@ export const LEG_PRESETS: LegPreset[] = [
     a: { thigh: { x: -0.04, z: 0.2, y: 0.1 }, shin: { x: 0.16 } },
     b: { thigh: { x: 0.02, z: -0.08 }, shin: { x: 0.04 } },
     signal: "legs-crossed",
+    seated: {
+      label: "ფეხი ფეხზე",
+      hint: "დახურულობა, თავდაცვა",
+      a: { thigh: { x: -1.62, z: 0.36, y: 0.06 }, shin: { x: 1.22 }, foot: { x: 0.25 } },
+      b: { thigh: { x: -SIT, z: 0.02 }, shin: { x: SIT } },
+    },
   },
   {
     id: "shift",
@@ -221,6 +250,13 @@ export const LEG_PRESETS: LegPreset[] = [
     a: { thigh: { x: 0.02, z: -0.04 }, shin: { x: 0.02 } },
     b: { thigh: { x: -0.16, z: 0.16 }, shin: { x: 0.26 } },
     signal: "weight-shift",
+    seated: {
+      label: "ტერფები ჩაკეტილი",
+      hint: "ემოციის შეკავება",
+      a: { thigh: { x: -SIT, z: 0.02 }, shin: { x: 1.95 } },
+      b: { thigh: { x: -SIT, z: -0.02 }, shin: { x: 1.95 } },
+      signal: "ankle-lock",
+    },
   },
   {
     id: "forward",
@@ -229,6 +265,12 @@ export const LEG_PRESETS: LegPreset[] = [
     a: { thigh: { x: -0.3, z: -0.05 }, shin: { x: 0.18 } },
     b: { thigh: { x: 0.12, z: 0.05 }, shin: { x: 0.05 } },
     signal: "foot-forward",
+    seated: {
+      label: "ერთი ფეხი წინ",
+      hint: "მზადაა წასასვლელად ან ჩასართავად",
+      a: { thigh: { x: -SIT, z: -0.06 }, shin: { x: 1.0 } },
+      b: { thigh: { x: -SIT, z: 0.06 }, shin: { x: 1.75 } },
+    },
   },
 ];
 
@@ -378,6 +420,26 @@ export const OUTFITS: Outfit[] = [
   { id: "green", label: "მწვანე", top: "#5f8672", bottom: "#33403a", shoes: "#232b27", formal: false, signal: "outfit-casual" },
 ];
 
+/* ------------------------------------------------------------------
+   გარემო — ავეჯი, რომელიც კონტექსტს ცვლის
+------------------------------------------------------------------- */
+
+export interface Setting {
+  id: string;
+  label: string;
+  hint: string;
+  /** ადამიანი ზის */
+  seated: boolean;
+  signal?: string;
+}
+
+export const SETTINGS: Setting[] = [
+  { id: "none", label: "ცარიელი სტუდია", hint: "მხოლოდ სხეული", seated: false },
+  { id: "chair", label: "სკამი", hint: "ჯდომის პოზები: ფეხი ფეხზე, ტერფების ჩაკეტვა", seated: true, signal: "seated" },
+  { id: "desk", label: "საწერი მაგიდა", hint: "მაგიდა — ბარიერი და ტერიტორია", seated: true, signal: "desk-barrier" },
+  { id: "podium", label: "ტრიბუნა", hint: "საჯარო გამოსვლა ბარიერის უკან", seated: false, signal: "podium" },
+];
+
 export const SKINS = ["#e8c4a0", "#d8a87c", "#b98153", "#8d5a34", "#5f3a22", "#f0d5bb"];
 
 /* ------------------------------------------------------------------
@@ -392,6 +454,7 @@ export interface AvatarConfig {
   posture: string;
   outfit: string;
   skin: string;
+  setting: string;
 }
 
 export const DEFAULT_CONFIG: AvatarConfig = {
@@ -402,7 +465,14 @@ export const DEFAULT_CONFIG: AvatarConfig = {
   posture: "neutral",
   outfit: "casual",
   skin: SKINS[0],
+  setting: "none",
 };
+
+export const isSeated = (cfg: Pick<AvatarConfig, "setting">) =>
+  SETTINGS.find((x) => x.id === cfg.setting)?.seated ?? false;
+
+/** მენჯის დაწევა ჯდომისას — ტერფები ზუსტად იატაკზე დგება */
+export const SEAT_DROP = -0.37;
 
 export function buildPose(cfg: AvatarConfig): AvatarPose {
   const arm = ARM_PRESETS.find((p) => p.id === cfg.arms) ?? ARM_PRESETS[0];
@@ -410,17 +480,19 @@ export function buildPose(cfg: AvatarConfig): AvatarPose {
   const head = HEAD_PRESETS.find((p) => p.id === cfg.head) ?? HEAD_PRESETS[0];
   const gaze = GAZE_PRESETS.find((p) => p.id === cfg.gaze) ?? GAZE_PRESETS[0];
   const post = POSTURE_PRESETS.find((p) => p.id === cfg.posture) ?? POSTURE_PRESETS[0];
+  const seated = isSeated(cfg);
+  const legs = seated ? leg.seated : leg;
 
   return {
     armA: arm.a,
     armB: arm.b,
-    legA: leg.a,
-    legB: leg.b,
+    legA: legs.a,
+    legB: legs.b,
     head: head.head,
     neck: { x: head.neck ?? 0 },
     spine: post.spine,
     chest: post.chest,
-    hipY: post.hipY + (leg.hipY ?? 0),
+    hipY: seated ? SEAT_DROP : post.hipY + (leg.hipY ?? 0),
     hipRotZ: post.hipRotZ,
     shoulderLift: post.shoulderLift,
     gaze: gaze.gaze,
@@ -431,12 +503,14 @@ export function buildPose(cfg: AvatarConfig): AvatarPose {
 }
 
 export function signalsOf(cfg: AvatarConfig): string[] {
+  const leg = LEG_PRESETS.find((p) => p.id === cfg.legs);
   return [
     ARM_PRESETS.find((p) => p.id === cfg.arms)?.signal,
-    LEG_PRESETS.find((p) => p.id === cfg.legs)?.signal,
+    isSeated(cfg) ? (leg?.seated.signal ?? leg?.signal) : leg?.signal,
     HEAD_PRESETS.find((p) => p.id === cfg.head)?.signal,
     GAZE_PRESETS.find((p) => p.id === cfg.gaze)?.signal,
     POSTURE_PRESETS.find((p) => p.id === cfg.posture)?.signal,
     OUTFITS.find((o) => o.id === cfg.outfit)?.signal,
+    SETTINGS.find((x) => x.id === cfg.setting)?.signal,
   ].filter(Boolean) as string[];
 }

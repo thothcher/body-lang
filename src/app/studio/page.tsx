@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function StudioPage() {
   return (
-    <div className="shell py-12">
+    <div className="shell pb-12 pt-4">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "მთავარი", href: "/" },
