@@ -23,17 +23,14 @@ export default function GestureCard({
   return (
     <article
       id={`g-${gesture.id}`}
-      className="card group scroll-mt-24 overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-lift)]"
+      className="group flex scroll-mt-28 flex-col"
       data-reveal="up"
     >
-      <div
-        className="relative grid place-items-center px-4 pt-5"
-        style={{ background: "var(--bg-sunken)" }}
-      >
+      <div className="stage relative grid place-items-center overflow-hidden px-4 pt-6 transition-[border-color,box-shadow] duration-300 group-hover:border-[var(--line-strong)] group-hover:shadow-[var(--shadow-lift)]">
         <GestureFigure
           gesture={gesture}
-          className={`w-full transition-transform duration-500 group-hover:scale-[1.04] ${
-            compact ? "h-36" : "h-52"
+          className={`w-full transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.05] ${
+            compact ? "h-40" : "h-56"
           }`}
         />
         <button
@@ -45,8 +42,8 @@ export default function GestureCard({
           data-cursor={saved ? "ამოშლა" : "შენახვა"}
           className="focus-ring absolute right-3 top-3 grid size-9 place-items-center rounded-full border backdrop-blur transition-colors"
           style={{
-            borderColor: saved ? "var(--color-clay)" : "var(--line)",
-            background: saved ? "var(--color-clay)" : "color-mix(in srgb, var(--bg-raised) 80%, transparent)",
+            borderColor: saved ? "var(--hot)" : "var(--line)",
+            background: saved ? "var(--hot)" : "var(--glass)",
             color: saved ? "#fff" : "var(--fg-muted)",
           }}
         >
@@ -58,15 +55,14 @@ export default function GestureCard({
         </button>
       </div>
 
-      <div className="p-5">
-        <div className="flex flex-wrap items-center gap-2">
-          <ToneBadge tone={gesture.tone} />
-          <span className="text-[11px] font-medium" style={{ color: "var(--fg-faint)" }}>
-            {PART_LABEL[gesture.part]}
-          </span>
+      <div className="px-1 pt-4">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-[18px] leading-snug tracking-[-0.025em]">{gesture.title}</h3>
+          <ToneBadge tone={gesture.tone} className="mt-0.5 shrink-0" />
         </div>
-
-        <h3 className="mt-2.5 text-[18px] leading-snug">{gesture.title}</h3>
+        <p className="mt-0.5 text-[12px]" style={{ color: "var(--fg-faint)" }}>
+          {PART_LABEL[gesture.part]}
+        </p>
         <p className="mt-1.5 text-[14.5px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
           {gesture.meaning}
         </p>
@@ -81,7 +77,7 @@ export default function GestureCard({
             </p>
             {gesture.response && (
               <p
-                className="mt-3 rounded-xl px-3.5 py-2.5 text-[13.5px] leading-relaxed"
+                className="mt-3 rounded-2xl px-4 py-3 text-[13.5px] leading-relaxed"
                 style={{ background: "var(--brand-wash)", color: "var(--brand-deep)" }}
               >
                 <strong className="font-semibold">რა ვქნა: </strong>
@@ -106,8 +102,8 @@ export default function GestureCard({
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="focus-ring mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold transition-colors"
-          style={{ color: "var(--brand)" }}
+          className="focus-ring mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold transition-colors hover:text-[var(--hot)]"
+          style={{ color: "var(--fg)" }}
         >
           {open ? "დახურვა" : "ვრცლად"}
           <ChevronDown

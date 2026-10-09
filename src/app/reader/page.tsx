@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ReaderClient from "@/components/reader/ReaderClient";
-import { SectionHeading } from "@/components/ui/Primitives";
+import { PageHeading } from "@/components/ui/Primitives";
 import { breadcrumbJsonLd, faqJsonLd, JsonLd } from "@/lib/seo";
 import { Plus } from "lucide-react";
 
@@ -41,9 +41,10 @@ export default function ReaderPage() {
       />
       <JsonLd data={faqJsonLd(FAQ)} />
 
-      <SectionHeading
+      <PageHeading
         kicker="ექვსი ნაბიჯი"
-        title="როგორ წავიკითხოთ ადამიანი"
+        title="წაკითხვა"
+        tagline="ადამიანი ექვს ნაბიჯში"
         lead="დააწკაპუნე ფიგურის ნებისმიერ ზონაზე ან ჩართე აქსესუარი. ყველაზე მნიშვნელოვანი აქ თანმიმდევრობაა — აქსესუარები კითხვებს სვამენ, პასუხებს არა."
       />
 

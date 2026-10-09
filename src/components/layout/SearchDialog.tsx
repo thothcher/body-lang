@@ -161,15 +161,15 @@ export default function SearchDialog() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="focus-ring flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors hover:bg-[var(--brand-wash)]"
-        style={{ borderColor: "var(--line)", color: "var(--fg-muted)" }}
+        className="focus-ring flex h-9 items-center gap-2 rounded-full border px-2.5 text-[13px] transition-colors hover:bg-[var(--bg-raised)] 2xl:px-3"
+        style={{ borderColor: "var(--line-strong)", color: "var(--fg-muted)" }}
         aria-label="ძიება"
         data-cursor="ძიება"
       >
         <Search className="size-4" strokeWidth={1.9} aria-hidden="true" />
-        <span className="hidden sm:inline lg:hidden xl:inline">ძიება</span>
+        <span className="hidden sm:inline lg:hidden 2xl:inline">ძიება</span>
         <kbd
-          className="hidden rounded px-1.5 py-0.5 font-sans text-[10px] md:inline lg:hidden xl:inline"
+          className="num hidden rounded-md px-1.5 py-0.5 text-[10px] md:inline lg:hidden 2xl:inline"
           style={{ background: "var(--bg-sunken)", color: "var(--fg-faint)" }}
         >
           ⌘K

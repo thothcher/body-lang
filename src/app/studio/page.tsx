@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import StudioClient from "@/components/studio/StudioClient";
-import { SectionHeading } from "@/components/ui/Primitives";
+import { PageHeading } from "@/components/ui/Primitives";
 import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -19,9 +19,10 @@ export default function StudioPage() {
           { name: "3D სტუდია", href: "/studio" },
         ])}
       />
-      <SectionHeading
+      <PageHeading
         kicker="ინტერაქტიული ლაბორატორია"
         title="3D სტუდია"
+        tagline="ააწყვე პოზა, ნახე აზრი"
         lead="შეცვალე ხელები, ფეხები, თავი, მზერა და პოზა — და ნახე, როგორ იცვლება წაკითხვა რეალურ დროში. ზოგი კომბინაცია განსაკუთრებულ მნიშვნელობას იძენს."
       />
       <div className="mt-8">

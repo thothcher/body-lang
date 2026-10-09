@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CHAPTERS } from "@/lib/content/chapters";
-import { PersonStanding } from "lucide-react";
+import { GESTURES } from "@/lib/content/gestures";
 
 const COLS: { title: string; links: { href: string; label: string }[] }[] = [
   {
@@ -33,36 +33,26 @@ const COLS: { title: string; links: { href: string; label: string }[] }[] = [
 
 export default function Footer() {
   return (
-    <footer className="mt-24 border-t" style={{ background: "var(--bg-sunken)" }}>
-      <div className="shell py-14">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_repeat(3,1fr)]">
-          <div>
-            <div className="flex items-center gap-2.5">
-              <span className="grid size-9 place-items-center rounded-xl" style={{ background: "var(--brand)" }}>
-                <PersonStanding className="size-5" color="#fff" strokeWidth={2} aria-hidden="true" />
-              </span>
-              <span className="font-serif text-lg font-semibold">სხეულის ენა</span>
-            </div>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-              ინტერაქტიული სახელმძღვანელო ალან პიზის წიგნის მიხედვით. {CHAPTERS.length} თავი,
-              ილუსტრაციები, ტესტები და თამაშები — ქართულად.
+    <footer className="mt-28 overflow-hidden border-t" style={{ borderColor: "var(--line)" }}>
+      <div className="shell pt-14">
+        <div className="grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <p className="max-w-sm text-[clamp(1.25rem,2vw,1.6rem)] font-semibold leading-snug tracking-[-0.02em]">
+              ინტერაქტიული სახელმძღვანელო ალან პიზის წიგნის მიხედვით<span className="dot">.</span>
             </p>
-            <p className="mt-4 text-xs leading-relaxed" style={{ color: "var(--fg-faint)" }}>
-              მასალა ეყრდნობა ალან პიზის წიგნს „სხეულის ენა“. საგანმანათლებლო დანიშნულებისაა.
+            <p className="mt-4 max-w-sm text-sm leading-relaxed" style={{ color: "var(--fg-faint)" }}>
+              <span className="num">{CHAPTERS.length}</span> თავი, <span className="num">{GESTURES.length}</span> ჟესტი,
+              ტესტები და თამაშები — ქართულად. საგანმანათლებლო დანიშნულებისაა.
             </p>
           </div>
 
           {COLS.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <h2 className="eyebrow mb-3">{col.title}</h2>
-              <ul className="grid gap-2">
+            <nav key={col.title} aria-label={col.title} className="md:col-span-2">
+              <h2 className="eyebrow mb-4">{col.title}</h2>
+              <ul className="grid gap-2.5">
                 {col.links.map((l) => (
                   <li key={l.href}>
-                    <Link
-                      href={l.href}
-                      className="focus-ring text-sm transition-colors hover:text-[var(--brand)]"
-                      style={{ color: "var(--fg-muted)" }}
-                    >
+                    <Link href={l.href} className="focus-ring ink-link pb-0.5 text-[14px]" style={{ color: "var(--fg-muted)" }}>
                       {l.label}
                     </Link>
                   </li>
@@ -73,13 +63,23 @@ export default function Footer() {
         </div>
 
         <div
-          className="mt-12 flex flex-col gap-3 border-t pt-6 text-xs sm:flex-row sm:items-center sm:justify-between"
-          style={{ color: "var(--fg-faint)" }}
+          className="mt-14 flex flex-col gap-2 border-t pt-5 text-xs sm:flex-row sm:items-center sm:justify-between"
+          style={{ color: "var(--fg-faint)", borderColor: "var(--line)" }}
         >
-          <p>© {new Date().getFullYear()} სხეულის ენა — სასწავლო პროექტი</p>
+          <p>
+            © <span className="num">{new Date().getFullYear()}</span> სხეულის ენა — სასწავლო პროექტი
+          </p>
           <p>შენი პროგრესი ინახება მხოლოდ შენს ბრაუზერში.</p>
         </div>
       </div>
+
+      <p
+        aria-hidden="true"
+        className="display pointer-events-none mt-8 select-none whitespace-nowrap px-2 pb-[1.2vw] text-center text-[clamp(3rem,12.4vw,13.5rem)] leading-[1.02]"
+        style={{ color: "var(--fg)" }}
+      >
+        სხეულის ენა<span className="dot">.</span>
+      </p>
     </footer>
   );
 }

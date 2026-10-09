@@ -2,29 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BodyFigure from "@/components/figures/BodyFigure";
 import FaceSignal from "@/components/figures/FaceSignal";
-import HandSign from "@/components/figures/HandSign";
+import GestureFigure from "@/components/figures/GestureFigure";
 import { RatioVisual } from "@/components/figures/Diagrams";
+import GestureStage from "@/components/home/GestureStage";
 import Parallax from "@/components/motion/Parallax";
-import ChapterCard from "@/components/ui/ChapterCard";
-import GestureCard from "@/components/ui/GestureCard";
 import { CTA, SectionHeading, Stat } from "@/components/ui/Primitives";
 import { CHAPTERS, TOTAL_MINUTES } from "@/lib/content/chapters";
 import { GESTURES, GESTURE_MAP } from "@/lib/content/gestures";
 import { ALL_QUESTIONS } from "@/lib/content/quiz";
 import { courseJsonLd, faqJsonLd, JsonLd, SITE } from "@/lib/seo";
-import {
-  ArrowRight,
-  BookOpen,
-  Box,
-  ClipboardCheck,
-  Gamepad2,
-  Hand,
-  Plus,
-  Scale,
-  ScanEye,
-  Trophy,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, Box, ClipboardCheck, Gamepad2, Plus, ScanEye, type LucideIcon } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `${SITE.name} — ${SITE.tagline}`,
@@ -55,7 +42,6 @@ const FAQ = [
   },
 ];
 
-const SPOTLIGHT = ["arms-crossed", "nose-touch", "steeple-up", "dilated-pupils", "figure-four", "palm-up"];
 
 const TOOLS: { href: string; kicker: string; title: string; text: string; pose: string; icon: LucideIcon }[] = [
   {
@@ -92,16 +78,29 @@ const TOOLS: { href: string; kicker: string; title: string; text: string; pose: 
   },
 ];
 
-const PATH: { n: string; t: string; d: string; href: string; icon: LucideIcon }[] = [
-  { n: "01", icon: Scale, t: "ისწავლე წესები", d: "მტევანი, კონგრუენტულობა, კონტექსტი — სამი ფილტრი ყველა დაკვირვებისთვის.", href: "/chapters/sami-tsesi" },
-  { n: "02", icon: Hand, t: "დაიმახსოვრე ჟესტები", d: `${GESTURES.length} ჟესტი ილუსტრაციებით, დაყოფილი სხეულის ნაწილების მიხედვით.`, href: "/chapters" },
-  { n: "03", icon: Gamepad2, t: "ივარჯიშე თამაშებში", d: "გამოცნობა, ბანქო და კავშირები — ცოდნა მეხსიერებაში მაშინ ჯდება, როცა გამოიყენება.", href: "/games" },
-  { n: "04", icon: Trophy, t: "შეამოწმე და შეინახე", d: "ტესტები თავების მიხედვით; პროგრესი ავტომატურად ინახება შენს ბრაუზერში.", href: "/progress" },
+const PATH: { n: string; t: string; d: string; href: string }[] = [
+  { n: "01", t: "ისწავლე წესები", d: "მტევანი, კონგრუენტულობა, კონტექსტი — სამი ფილტრი ყველა დაკვირვებისთვის.", href: "/chapters/sami-tsesi" },
+  { n: "02", t: "დაიმახსოვრე ჟესტები", d: `${GESTURES.length} ჟესტი ილუსტრაციებით, დაყოფილი სხეულის ნაწილების მიხედვით.`, href: "/chapters" },
+  { n: "03", t: "ივარჯიშე თამაშებში", d: "გამოცნობა, ბანქო და კავშირები — ცოდნა მეხსიერებაში მაშინ ჯდება, როცა გამოიყენება.", href: "/games" },
+  { n: "04", t: "შეამოწმე და შეინახე", d: "ტესტები თავების მიხედვით; პროგრესი ავტომატურად ინახება შენს ბრაუზერში.", href: "/progress" },
+];
+
+const TICKER = [
+  "ხელის გულები",
+  "მზერის სამი ზონა",
+  "ცხვირთან შეხება",
+  "გადაჯვარედინებული მკლავები",
+  "პირამიდა",
+  "გუგები",
+  "ტერიტორია",
+  "ფეხის მიმართულება",
+  "ღიმილი",
+  "სარკისებური პოზა",
 ];
 
 export default function HomePage() {
-  const featured = CHAPTERS.slice(0, 6);
-  const spotlight = SPOTLIGHT.map((id) => GESTURE_MAP[id]).filter(Boolean);
+  const index = CHAPTERS.slice(0, 8);
+  const [studio, ...tools] = TOOLS;
 
   return (
     <>
@@ -109,219 +108,168 @@ export default function HomePage() {
       <JsonLd data={faqJsonLd(FAQ)} />
 
       {/* ============================ HERO ============================ */}
-      <section className="grain relative overflow-hidden pb-20 pt-10 sm:pt-16">
-        <div
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background:
-              "radial-gradient(90% 60% at 50% -10%, var(--brand-wash), transparent 70%), radial-gradient(60% 40% at 100% 20%, var(--color-clay-wash), transparent 60%)",
-          }}
-        />
-
-        {/* პარალაქსული ფიგურები */}
-        <Parallax speed={0.24} tilt={0.5} className="pointer-events-none absolute -left-6 top-24 hidden opacity-[0.5] lg:block">
-          <BodyFigure pose="arms-crossed" className="h-72" showFocus={false} />
-        </Parallax>
-        <Parallax speed={-0.18} tilt={0.8} className="pointer-events-none absolute -right-4 top-40 hidden opacity-[0.5] lg:block">
-          <BodyFigure pose="steeple-up" className="h-64" showFocus={false} />
-        </Parallax>
-        <Parallax speed={0.34} tilt={1.4} className="pointer-events-none absolute right-[16%] top-16 hidden xl:block">
-          <HandSign sign="ok" className="h-24 opacity-70" />
-        </Parallax>
-
-        <div className="shell relative">
-          <div className="mx-auto max-w-3xl text-center">
-            <p
-              className="mx-auto inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12px]"
-              style={{ borderColor: "var(--line-strong)", color: "var(--fg-muted)" }}
-              data-reveal="down"
-            >
-              <span className="size-1.5 rounded-full" style={{ background: "var(--color-clay)" }} />
-              ალან პიზის წიგნის მიხედვით · ქართულად
-            </p>
-
-            <h1
-              className="mt-6 text-balance font-serif text-[clamp(2.4rem,7vw,4.6rem)] font-bold leading-[1.06]"
-              data-reveal="up"
-              data-reveal-delay="80"
-            >
-              ადამიანები{" "}
-              <span className="relative inline-block">
-                <span style={{ color: "var(--brand)" }}>სიტყვებამდე</span>
-                <svg
-                  className="absolute -bottom-1 left-0 w-full"
-                  viewBox="0 0 200 12"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                  style={{ height: "0.36em" }}
-                >
-                  <path
-                    d="M2 8C40 3 80 3 118 6c28 2 54 3 80 1"
-                    fill="none"
-                    stroke="var(--color-clay)"
-                    strokeWidth="3.2"
-                    strokeLinecap="round"
-                    opacity="0.55"
-                  />
-                </svg>
-              </span>{" "}
-              ლაპარაკობენ
-            </h1>
-
-            <p
-              className="mx-auto mt-6 max-w-xl text-pretty text-[16.5px] leading-relaxed"
-              style={{ color: "var(--fg-muted)" }}
-              data-reveal="up"
-              data-reveal-delay="160"
-            >
-              {CHAPTERS.length} თავი, {GESTURES.length} ჟესტი ილუსტრაციით, ტესტები, თამაშები და
-              ცოცხალი 3D მოდელი — რომ ისწავლო ის, რასაც სხეული ამბობს მაშინ, როცა ენა დუმს.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3" data-reveal="up" data-reveal-delay="240">
-              <CTA href="/chapters/safuzvlebi" cursor="დაწყება">
-                დაიწყე სწავლა
-                <ArrowRight className="size-4" strokeWidth={2.4} aria-hidden="true" />
-              </CTA>
-              <CTA href="/studio" variant="outline" cursor="3D">
-                <Box className="size-4" strokeWidth={2} aria-hidden="true" />
-                სცადე 3D სტუდია
-              </CTA>
-            </div>
-          </div>
-
-          {/* ჰერო ილუსტრაციები */}
-          <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-6 lg:mx-auto lg:max-w-3xl">
-            {[
-              { pose: "palm-up", label: "ღიაობა", tone: "var(--color-sage)" },
-              { pose: "nose-touch", label: "სიცრუე", tone: "var(--color-amber)" },
-              { pose: "hips", label: "მზადყოფნა", tone: "var(--color-indigo)" },
-            ].map((item, i) => (
-              <figure
-                key={item.pose}
-                className="card grid place-items-center overflow-hidden pb-3 pt-4 transition-transform duration-500 hover:-translate-y-2"
-                data-reveal="rise"
-                data-reveal-delay={300 + i * 110}
-              >
-                <BodyFigure pose={item.pose} className="h-36 sm:h-48" />
-                <figcaption className="mt-2 text-[12.5px] font-semibold" style={{ color: item.tone }}>
-                  {item.label}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
+      <section className="shell pb-6 pt-2 lg:pt-3">
+        <GestureStage first="palm-up" />
       </section>
 
-      {/* ============================ RATIO =========================== */}
-      <section className="shell py-16">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-          <div>
-            <SectionHeading
-              kicker="რატომ ღირს სწავლა"
-              title="სიტყვები შეტყობინების მხოლოდ მცირე ნაწილია"
-              lead="ალბერტ მეიერაბიანის კვლევამ აჩვენა, რომ ინფორმაციის უდიდესი ნაწილი სიტყვების გვერდით მიდის. თუ მხოლოდ სიტყვებს უსმენ — უმეტესობას კარგავ."
-            />
-            <div className="mt-6 flex flex-wrap gap-3">
-              <CTA href="/chapters/safuzvlebi" variant="outline">
-                <BookOpen className="size-4" strokeWidth={2} aria-hidden="true" />
-                წაიკითხე საფუძვლები
-              </CTA>
+      {/* =========================== TICKER =========================== */}
+      <div className="mt-10 overflow-hidden border-y py-4" style={{ borderColor: "var(--line)" }} aria-hidden="true">
+        <div className="animate-marquee flex w-max">
+          {[0, 1].map((k) => (
+            <div key={k} className="flex shrink-0 items-center">
+              {TICKER.map((t) => (
+                <span key={t} className="flex items-center whitespace-nowrap text-[clamp(1.25rem,2.4vw,2rem)] font-bold tracking-[-0.035em]">
+                  <span className="px-6">{t}</span>
+                  <span className="size-2 rounded-full" style={{ background: "var(--hot)" }} />
+                </span>
+              ))}
             </div>
-          </div>
-          <RatioVisual />
+          ))}
         </div>
+      </div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* ============================ RATIO =========================== */}
+      <section className="shell py-24 lg:py-32">
+        <SectionHeading
+          index="01"
+          kicker="რატომ ღირს სწავლა"
+          title="სიტყვები შეტყობინების მხოლოდ მცირე ნაწილია"
+          lead="ალბერტ მეიერაბიანის კვლევამ აჩვენა, რომ ინფორმაციის უდიდესი ნაწილი სიტყვების გვერდით მიდის. თუ მხოლოდ სიტყვებს უსმენ — უმეტესობას კარგავ."
+        />
+        <div className="mt-6 grid lg:grid-cols-12">
+          <div className="lg:col-span-7 lg:col-start-5">
+            <RatioVisual />
+          </div>
+        </div>
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <Stat value={`${CHAPTERS.length}`} label="თავი" sub="საფუძვლებიდან პრაქტიკამდე" />
-          <Stat value={`${GESTURES.length}`} label="ჟესტი" sub="თითოეული ილუსტრაციით" accent="var(--color-clay)" />
-          <Stat value={`${ALL_QUESTIONS.length}`} label="ტესტის კითხვა" sub="შვიდი თემატური ბლოკი" accent="var(--color-sage)" />
-          <Stat value={`${TOTAL_MINUTES} წთ`} label="კითხვის დრო" sub="მთლიანი მასალა" accent="var(--color-amber)" />
+          <Stat value={`${GESTURES.length}`} label="ჟესტი" sub="თითოეული ილუსტრაციით" accent="var(--hot)" />
+          <Stat value={`${ALL_QUESTIONS.length}`} label="ტესტის კითხვა" sub="შვიდი თემატური ბლოკი" />
+          <Stat value={`${TOTAL_MINUTES}`} label="წუთი კითხვა" sub="მთლიანი მასალა" />
         </div>
       </section>
 
       {/* =========================== CHAPTERS ========================= */}
       <section className="shell py-16">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <SectionHeading
-            kicker="სასწავლო გზა"
-            title="თავები"
-            lead="თითოეული თავი მთავრდება შეჯამებით და დასამახსოვრებელი ბირთვით — რომ ერთხელ წაკითხულმა იმუშაოს."
-          />
-          <CTA href="/chapters" variant="ghost" cursor="ყველა">
+        <SectionHeading
+          index="02"
+          kicker="სასწავლო გზა"
+          title="თავები, თანმიმდევრობით"
+          lead="თითოეული თავი მთავრდება შეჯამებით და დასამახსოვრებელი ბირთვით — რომ ერთხელ წაკითხულმა იმუშაოს."
+        />
+
+        <ol className="mt-12 border-t" style={{ borderColor: "var(--line-strong)" }}>
+          {index.map((c, i) => {
+            const g = GESTURE_MAP[c.cover];
+            return (
+              <li key={c.slug} className="border-b" style={{ borderColor: "var(--line)" }} data-reveal="up" data-reveal-delay={(i % 4) * 60}>
+                <Link
+                  href={`/chapters/${c.slug}`}
+                  className="focus-ring group relative grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-4 py-5 sm:grid-cols-[4rem_minmax(0,1.2fr)_minmax(0,1fr)_5rem_auto] sm:gap-x-6 sm:py-6"
+                  data-cursor="წაკითხვა"
+                >
+                  <span className="num text-[13px]" style={{ color: "var(--fg-faint)" }}>
+                    {String(c.order).padStart(2, "0")}
+                  </span>
+                  <span className="text-[clamp(1.35rem,2.6vw,2.2rem)] font-bold leading-tight tracking-[-0.04em] transition-[color,transform] duration-300 group-hover:translate-x-2 group-hover:text-[var(--hot)]">
+                    {c.title}
+                  </span>
+                  <span className="hidden text-[14px] leading-snug sm:block" style={{ color: "var(--fg-muted)" }}>
+                    {c.subtitle}
+                  </span>
+                  <span className="num hidden text-right text-[12px] sm:block" style={{ color: "var(--fg-faint)" }}>
+                    {c.minutes} წთ
+                  </span>
+                  <span
+                    className="grid size-10 place-items-center rounded-full border transition-colors duration-300 group-hover:border-transparent group-hover:bg-[var(--fg)] group-hover:text-[var(--bg)]"
+                    style={{ borderColor: "var(--line-strong)" }}
+                    aria-hidden="true"
+                  >
+                    <ArrowUpRight className="size-4" strokeWidth={2} />
+                  </span>
+                  {g && (
+                    <span
+                      className="stage pointer-events-none absolute right-28 top-1/2 z-10 hidden h-36 w-28 -translate-y-1/2 scale-90 place-items-center opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 xl:grid"
+                      style={{ boxShadow: "var(--shadow-lift)" }}
+                      aria-hidden="true"
+                    >
+                      <GestureFigure gesture={g} labelled={false} showFocus={false} className="h-28 w-auto" />
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+
+        <div className="mt-8 flex justify-end">
+          <CTA href="/chapters" variant="outline" cursor="ყველა">
             ყველა {CHAPTERS.length} თავი
             <ArrowRight className="size-4" strokeWidth={2.2} aria-hidden="true" />
           </CTA>
         </div>
-
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((c, i) => (
-            <ChapterCard key={c.slug} chapter={c} index={i} />
-          ))}
-        </div>
-      </section>
-
-      {/* =========================== SPOTLIGHT ======================== */}
-      <section className="py-16" style={{ background: "var(--bg-sunken)" }}>
-        <div className="shell">
-          <SectionHeading
-            kicker="ჟესტების ბიბლიოთეკა"
-            title="ყველა ჟესტი ერთ ენაზე — ილუსტრაციით"
-            lead="ყოველი ჟესტი დაყოფილია ტონის მიხედვით: ღია, დახურული, უპირატესობა, სიცრუე ან შეფასება. შენახვა ერთი დაწკაპუნებით."
-            align="center"
-          />
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {spotlight.map((g) => (
-              <GestureCard key={g.id} gesture={g} />
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <CTA href="/chapters" variant="outline">
-              <BookOpen className="size-4" strokeWidth={2} aria-hidden="true" />
-              ნახე სრული ბიბლიოთეკა
-            </CTA>
-          </div>
-        </div>
       </section>
 
       {/* ============================ TOOLS =========================== */}
-      <section className="shell py-16">
+      <section className="shell py-24">
         <SectionHeading
+          index="03"
           kicker="ინსტრუმენტები"
           title="ისწავლე კეთებით, არა კითხვით"
           lead="ოთხი ინტერაქტიული ინსტრუმენტი, რომლებიც თეორიას უნარად აქცევს."
-          align="center"
         />
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
-          {TOOLS.map((t, i) => (
+
+        <div className="mt-12 grid gap-4 lg:grid-cols-12">
+          <Link
+            href={studio.href}
+            className="ink focus-ring group relative flex min-h-[440px] flex-col justify-between overflow-hidden rounded-[var(--radius-card)] p-7 sm:p-9 lg:col-span-7 lg:row-span-3"
+            data-reveal="up"
+            data-cursor="გახსნა"
+          >
+            <div className="relative z-10 flex items-center justify-between">
+              <span className="num text-[13px] opacity-60">{studio.kicker}</span>
+              <span className="grid size-11 place-items-center rounded-full transition-transform duration-300 group-hover:rotate-45" style={{ background: "var(--hot)", color: "#fff" }}>
+                <ArrowUpRight className="size-5" strokeWidth={2} aria-hidden="true" />
+              </span>
+            </div>
+            <BodyFigure
+              pose={studio.pose}
+              className="pointer-events-none absolute -bottom-6 right-[-4%] h-[92%] transition-transform duration-700 group-hover:-translate-y-3"
+              showFocus={false}
+            />
+            <div className="relative z-10 max-w-sm">
+              <h3 className="display text-[clamp(2.6rem,5vw,4.4rem)]">
+                3D სტუდია<span className="dot">.</span>
+              </h3>
+              <p className="mt-3 text-[15px] leading-relaxed opacity-70">{studio.text}</p>
+            </div>
+          </Link>
+
+          {tools.map((t, i) => (
             <Link
               key={t.href}
               href={t.href}
-              className="card focus-ring group flex items-center gap-5 overflow-hidden p-5 transition-all duration-400 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
-              data-reveal="up"
-              data-reveal-delay={(i % 2) * 90}
+              className="card focus-ring group flex items-center gap-5 p-5 transition-[border-color,box-shadow] duration-300 hover:border-[var(--line-strong)] hover:shadow-[var(--shadow-lift)] lg:col-span-5"
+              data-reveal="left"
+              data-reveal-delay={i * 90}
               data-cursor="გახსნა"
             >
-              <div
-                className="grid size-28 shrink-0 place-items-center rounded-2xl"
-                style={{ background: "var(--bg-sunken)" }}
-              >
-                <BodyFigure
-                  pose={t.pose}
-                  className="h-24 transition-transform duration-500 group-hover:scale-110"
-                  showFocus={false}
-                />
+              <div className="stage grid size-24 shrink-0 place-items-center rounded-[18px_18px_18px_4px]">
+                <BodyFigure pose={t.pose} className="h-20 transition-transform duration-500 group-hover:scale-110" showFocus={false} />
               </div>
-              <div className="min-w-0">
-                <p className="eyebrow inline-flex items-center gap-1.5">
-                  <t.icon className="size-3.5" strokeWidth={2} style={{ color: "var(--brand)" }} aria-hidden="true" />
-                  {t.kicker}
-                </p>
-                <h3 className="mt-1 text-[19px] transition-colors group-hover:text-[var(--brand)]">{t.title}</h3>
-                <p className="mt-1.5 text-[14px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+              <div className="min-w-0 flex-1">
+                <p className="eyebrow">{t.kicker}</p>
+                <h3 className="mt-1 text-[20px] tracking-[-0.03em]">{t.title}</h3>
+                <p className="mt-1 text-[13.5px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
                   {t.text}
                 </p>
               </div>
+              <ArrowUpRight
+                className="size-5 shrink-0 transition-[color,transform] duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--hot)]"
+                strokeWidth={1.8}
+                style={{ color: "var(--fg-faint)" }}
+                aria-hidden="true"
+              />
             </Link>
           ))}
         </div>
@@ -329,36 +277,37 @@ export default function HomePage() {
 
       {/* ========================== EYE TEASER ======================== */}
       <section className="shell py-16">
-        <div className="card grid items-center gap-8 overflow-hidden p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr]">
-          <div>
+        <div className="grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
             <SectionHeading
+              stacked
+              index="04"
               kicker="ერთი მაგალითი"
               title="მზერის სამი ზონა"
               lead="სად უყურებ — განსაზღვრავს ურთიერთობის ტიპს. შუბლის სამკუთხედი ქმნის საქმიან ატმოსფეროს, პირამდე დაწევა — მეგობრულს, სხეულზე დაწევა — ინტიმურს."
             />
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-5">
               <CTA href="/chapters/tvalebi">თავი თვალებზე</CTA>
-              <CTA href="/test/eyes" variant="outline">
-                ტესტი თვალებზე
+              <CTA href="/test/eyes" variant="ghost">
+                ტესტი თვალებზე →
               </CTA>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3 lg:col-span-7">
             {[
-              { p: "gaze-business", l: "საქმიანი" },
-              { p: "gaze-social", l: "სოციალური" },
-              { p: "gaze-intimate", l: "ინტიმური" },
+              { p: "gaze-business", l: "საქმიანი", n: "a" },
+              { p: "gaze-social", l: "სოციალური", n: "b" },
+              { p: "gaze-intimate", l: "ინტიმური", n: "c" },
             ].map((g, i) => (
-              <figure
-                key={g.p}
-                className="rounded-2xl pb-3 pt-2 text-center"
-                style={{ background: "var(--bg-sunken)" }}
-                data-reveal="scale"
-                data-reveal-delay={i * 110}
-              >
-                <FaceSignal pose={g.p} className="h-36 w-full" />
-                <figcaption className="mt-1 text-[12px] font-semibold" style={{ color: "var(--fg-muted)" }}>
+              <figure key={g.p} data-reveal="up" data-reveal-delay={i * 110} className={i === 1 ? "lg:-translate-y-10" : ""}>
+                <div className="stage grid aspect-[3/4] place-items-center overflow-hidden px-2">
+                  <FaceSignal pose={g.p} className="w-full" />
+                </div>
+                <figcaption className="mt-3 flex items-baseline justify-between px-1 text-[13px] font-semibold">
                   {g.l}
+                  <span className="num text-[11px] font-normal" style={{ color: "var(--fg-faint)" }}>
+                    ({g.n})
+                  </span>
                 </figcaption>
               </figure>
             ))}
@@ -367,92 +316,94 @@ export default function HomePage() {
       </section>
 
       {/* ============================ PATH ============================ */}
-      <section className="py-16" style={{ background: "var(--bg-sunken)" }}>
-        <div className="shell">
-          <SectionHeading kicker="როგორ მუშაობს" title="ოთხი ნაბიჯი" align="center" />
-          <ol className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {PATH.map((s, i) => (
-              <li key={s.n} data-reveal="up" data-reveal-delay={i * 90}>
-                <Link href={s.href} className="card focus-ring group block h-full p-5 transition-all duration-400 hover:-translate-y-1">
-                  <span className="flex items-center justify-between">
-                    <span
-                      className="font-serif text-[34px] font-bold leading-none"
-                      style={{ color: "var(--brand)", opacity: 0.32 }}
-                    >
-                      {s.n}
-                    </span>
-                    <span
-                      className="grid size-10 place-items-center rounded-xl transition-transform duration-400 group-hover:-rotate-6 group-hover:scale-110"
-                      style={{ background: "var(--brand-wash)", color: "var(--brand)" }}
-                    >
-                      <s.icon className="size-5" strokeWidth={1.8} aria-hidden="true" />
-                    </span>
-                  </span>
-                  <h3 className="mt-2 text-[17px] transition-colors group-hover:text-[var(--brand)]">{s.t}</h3>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-                    {s.d}
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </div>
+      <section className="shell py-24">
+        <SectionHeading index="05" kicker="როგორ მუშაობს" title="ოთხი ნაბიჯი" />
+        <ol className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4">
+          {PATH.map((s, i) => (
+            <li
+              key={s.n}
+              className="border-t py-6 sm:pr-6 lg:border-l lg:border-t-0 lg:px-6 lg:py-2 lg:first:border-l-0 lg:first:pl-0"
+              style={{ borderColor: "var(--line-strong)" }}
+              data-reveal="up"
+              data-reveal-delay={i * 90}
+            >
+              <Link href={s.href} className="focus-ring group block">
+                <span
+                  className="display block text-[clamp(3.5rem,6vw,5.5rem)] transition-colors duration-300 group-hover:!text-[var(--hot)]"
+                  style={{ color: "var(--line-strong)" }}
+                >
+                  {s.n}
+                </span>
+                <h3 className="mt-6 text-[19px] tracking-[-0.03em]">{s.t}</h3>
+                <p className="mt-2 text-[14px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+                  {s.d}
+                </p>
+                <span className="ink-link mt-4 inline-block text-[13px] font-semibold">გახსნა →</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* ============================= FAQ ============================ */}
       <section className="shell py-16">
-        <SectionHeading kicker="კითხვები" title="ხშირად დასმული კითხვები" align="center" />
-        <div className="mx-auto mt-8 grid max-w-3xl gap-3">
-          {FAQ.map((item, i) => (
-            <details
-              key={item.q}
-              className="card group overflow-hidden px-5 py-4 transition-colors"
-              data-reveal="up"
-              data-reveal-delay={i * 70}
-            >
-              <summary className="focus-ring flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-[16.5px] font-semibold">
-                {item.q}
-                <Plus
-                  className="size-4 shrink-0 transition-transform duration-300 group-open:rotate-45"
-                  strokeWidth={2.2}
-                  style={{ color: "var(--brand)" }}
-                  aria-hidden="true"
-                />
-              </summary>
-              <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-                {item.a}
-              </p>
-            </details>
-          ))}
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <SectionHeading stacked index="06" kicker="კითხვები" title="ხშირად დასმული კითხვები" />
+            </div>
+          </div>
+          <div className="border-t lg:col-span-8" style={{ borderColor: "var(--line-strong)" }}>
+            {FAQ.map((item, i) => (
+              <details
+                key={item.q}
+                className="group border-b py-6"
+                style={{ borderColor: "var(--line)" }}
+                data-reveal="up"
+                data-reveal-delay={i * 60}
+              >
+                <summary className="focus-ring flex cursor-pointer list-none items-start gap-5 text-[clamp(1.1rem,1.8vw,1.4rem)] font-bold tracking-[-0.03em] [&::-webkit-details-marker]:hidden">
+                  <span className="num w-8 shrink-0 pt-1 text-[12px] font-normal tracking-normal" style={{ color: "var(--fg-faint)" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="flex-1">{item.q}</span>
+                  <span
+                    className="grid size-9 shrink-0 place-items-center rounded-full border transition-colors duration-300 group-open:border-transparent group-open:bg-[var(--hot)] group-open:text-white"
+                    style={{ borderColor: "var(--line-strong)" }}
+                  >
+                    <Plus className="size-4 transition-transform duration-300 group-open:rotate-45" strokeWidth={2} aria-hidden="true" />
+                  </span>
+                </summary>
+                <p className="mt-3 max-w-[62ch] pl-[3.25rem] pr-4 text-[15px] leading-relaxed sm:pr-14" style={{ color: "var(--fg-muted)" }}>
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ============================= CTA ============================ */}
-      <section className="shell pb-8">
-        <div
-          className="grain relative overflow-hidden rounded-[28px] px-6 py-14 text-center sm:px-12"
-          style={{ background: "var(--brand)" }}
-          data-reveal="scale"
-        >
-          <Parallax speed={0.14} className="pointer-events-none absolute -left-8 -top-6 opacity-20">
-            <BodyFigure pose="open-stance" className="h-56" showFocus={false} />
-          </Parallax>
-          <Parallax speed={-0.12} className="pointer-events-none absolute -bottom-10 -right-6 opacity-20">
-            <BodyFigure pose="behind-back" className="h-56" showFocus={false} />
+      <section className="shell pt-16">
+        <div className="ink relative overflow-hidden rounded-[var(--radius-3xl)] px-6 py-16 sm:px-12 sm:py-20" data-reveal="scale">
+          <Parallax speed={-0.1} className="pointer-events-none absolute -bottom-16 right-[2%] hidden md:block">
+            <BodyFigure pose="open-stance" className="h-[380px]" showFocus={false} />
           </Parallax>
 
-          <h2 className="relative text-balance text-[clamp(1.7rem,4vw,2.6rem)]" style={{ color: "#fff" }}>
-            15 წუთი დღეში. ერთი თვე.
-          </h2>
-          <p className="relative mx-auto mt-3 max-w-lg text-[15.5px] leading-relaxed" style={{ color: "rgba(255,255,255,.85)" }}>
-            იმდენი სჭირდება, რომ ადამიანებს სხვანაირად დაინახო. დაწყება ახლავე შეგიძლია — პროგრესი
-            ავტომატურად შეინახება.
+          <p className="eyebrow relative" style={{ color: "inherit", opacity: 0.6 }}>
+            დაწყება ახლავე
           </p>
-          <div className="relative mt-7 flex flex-wrap justify-center gap-3">
+          <h2 className="display relative mt-5 max-w-[14ch] text-[clamp(2.6rem,7vw,6.2rem)]">
+            15 წუთი დღეში<span className="dot">.</span> ერთი თვე<span className="dot">.</span>
+          </h2>
+          <p className="relative mt-8 max-w-md text-[16px] leading-relaxed opacity-70">
+            იმდენი სჭირდება, რომ ადამიანებს სხვანაირად დაინახო. დაწყება ახლავე შეგიძლია — პროგრესი ავტომატურად შეინახება.
+          </p>
+          <div className="relative mt-9 flex flex-wrap gap-3">
             <Link
               href="/chapters/safuzvlebi"
-              className="focus-ring inline-flex items-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold transition-transform hover:-translate-y-0.5"
-              style={{ background: "#fff", color: "var(--color-indigo-deep)" }}
+              className="focus-ring inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold transition-transform duration-300 hover:-translate-y-0.5"
+              style={{ background: "var(--hot)", color: "#fff" }}
               data-cursor="დაწყება"
             >
               პირველი თავი
@@ -460,8 +411,8 @@ export default function HomePage() {
             </Link>
             <Link
               href="/games/guess"
-              className="focus-ring inline-flex items-center gap-2 rounded-full border px-6 py-3 text-[15px] font-medium"
-              style={{ borderColor: "rgba(255,255,255,.4)", color: "#fff" }}
+              className="focus-ring inline-flex items-center gap-2 rounded-full border px-6 py-3.5 text-[15px] font-semibold transition-colors"
+              style={{ borderColor: "color-mix(in srgb, var(--bg) 30%, transparent)" }}
               data-cursor="თამაში"
             >
               <Gamepad2 className="size-4" strokeWidth={2} aria-hidden="true" />

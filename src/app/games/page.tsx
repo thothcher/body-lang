@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BodyFigure from "@/components/figures/BodyFigure";
-import { SectionHeading } from "@/components/ui/Primitives";
+import { PageHeading } from "@/components/ui/Primitives";
 import GameScores from "@/components/games/GameScores";
 import { GESTURES } from "@/lib/content/gestures";
 import { SCENES, CONNECTION_PUZZLES } from "@/lib/content/games";
@@ -77,44 +77,64 @@ export default function GamesPage() {
         ])}
       />
 
-      <SectionHeading
+      <PageHeading
         kicker="ოთხი თამაში"
-        title="ივარჯიშე თამაშით"
+        title="თამაშები"
+        tagline="ივარჯიშე თამაშით"
         lead="ცოდნა მეხსიერებაში მაშინ ჯდება, როცა გამოიყენება. თითოეული თამაში სხვა უნარს ავარჯიშებს: სისწრაფეს, მეხსიერებას, ლოგიკასა და კონტექსტის წაკითხვას."
       />
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2">
+      <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2">
         {GAMES.map((g, i) => (
           <Link
             key={g.href}
             href={g.href}
-            className="card focus-ring group relative flex flex-col overflow-hidden transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[var(--shadow-lift)]"
+            className="focus-ring group relative flex flex-col"
             data-reveal="up"
             data-reveal-delay={(i % 2) * 100}
             data-cursor="თამაში"
           >
-            <div className="relative grid h-40 place-items-center overflow-hidden" style={{ background: g.wash }}>
-              <BodyFigure
-                pose={g.pose}
-                className="h-36 transition-transform duration-600 group-hover:scale-110 group-hover:-rotate-3"
-                showFocus={false}
-              />
+            <div
+              className="relative aspect-[16/11] overflow-hidden rounded-[var(--radius-card)] border transition-shadow duration-300 group-hover:shadow-[var(--shadow-lift)]"
+              style={{
+                background: `radial-gradient(120% 100% at 85% 100%, ${g.wash}, transparent 70%), var(--stage)`,
+                borderColor: "var(--line)",
+              }}
+            >
+              <span className="num absolute left-5 top-4 text-[13px]" style={{ color: "var(--fg-faint)" }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <span
-                className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+                className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-semibold"
                 style={{ background: g.color, color: "#fff" }}
               >
                 <g.icon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
                 {g.tag}
               </span>
+              <div className="absolute inset-x-0 bottom-0 top-14 grid place-items-center">
+                <BodyFigure
+                  pose={g.pose}
+                  className="h-full w-auto transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:-translate-y-2 group-hover:scale-105"
+                  showFocus={false}
+                />
+              </div>
             </div>
-            <div className="flex flex-1 flex-col p-5">
-              <h2 className="text-[20px] transition-colors group-hover:text-[var(--brand)]">{g.title}</h2>
-              <p className="mt-1.5 flex-1 text-[14px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-                {g.desc}
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-semibold" style={{ color: g.color }}>
-                თამაში
-                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2.4} aria-hidden="true" />
+            <div className="flex items-start justify-between gap-6 px-1 pt-5">
+              <div>
+                <h2 className="text-[clamp(1.5rem,2.4vw,2rem)] tracking-[-0.04em]">
+                  {g.title}
+                  <span className="dot">.</span>
+                </h2>
+                <p className="mt-2 max-w-[48ch] text-[14.5px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+                  {g.desc}
+                </p>
+              </div>
+              <span
+                className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border transition-colors duration-300 group-hover:border-transparent group-hover:bg-[var(--fg)] group-hover:text-[var(--bg)]"
+                style={{ borderColor: "var(--line-strong)" }}
+                aria-hidden="true"
+              >
+                <ArrowRight className="size-4 transition-transform duration-300 group-hover:-rotate-45" strokeWidth={2} />
               </span>
             </div>
           </Link>
@@ -124,9 +144,11 @@ export default function GamesPage() {
       <GameScores />
 
       <section className="mt-14" data-reveal="up">
-        <div className="card p-6 sm:p-8">
-          <h2 className="text-[20px]">როგორ გამოვიყენოთ თამაშები</h2>
-          <ol className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-8 border-t pt-8 lg:grid-cols-12" style={{ borderColor: "var(--line-strong)" }}>
+          <h2 className="text-[clamp(1.5rem,2.6vw,2.2rem)] tracking-[-0.04em] lg:col-span-4">
+            როგორ გამოვიყენოთ თამაშები<span className="dot">.</span>
+          </h2>
+          <ol className="grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:col-span-8">
             {[
               { t: "დაიწყე გამოცნობით", d: "ის ყველაზე სწრაფად გიჩვენებს, რომელი ჟესტები არ იცი." },
               { t: "გაამყარე ბანქოთი", d: "შეწყვილება ილუსტრაციასა და მნიშვნელობას შორის კავშირს ამაგრებს." },
@@ -134,11 +156,8 @@ export default function GamesPage() {
               { t: "გადაიტანე ცხოვრებაში", d: "სცენები ასწავლის იმას, რაც მთავარია — კონტექსტში წაკითხვას." },
             ].map((s, i) => (
               <li key={s.t} className="flex gap-3" data-reveal="left" data-reveal-delay={i * 80}>
-                <span
-                  className="grid size-7 shrink-0 place-items-center rounded-full text-[12px] font-bold"
-                  style={{ background: "var(--brand-wash)", color: "var(--brand)" }}
-                >
-                  {i + 1}
+                <span className="num w-7 shrink-0 pt-0.5 text-[13px]" style={{ color: "var(--hot)" }}>
+                  {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="text-[14px] leading-relaxed">
                   <strong className="font-semibold">{s.t}</strong>

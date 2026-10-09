@@ -25,32 +25,112 @@ export function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow">{children}</p>;
 }
 
+/** ტექსტის ბოლოს წერტილი — ბრენდის ხელწერა („ჟესტი.“) */
+export function Stop({ text }: { text: string }) {
+  if (/[.?!…:»“"]$/.test(text.trim())) return <>{text}</>;
+  return (
+    <>
+      {text}
+      <span className="dot">.</span>
+    </>
+  );
+}
+
+/**
+ * სექციის სათაური — რედაქციული ბადე: მარცხნივ ნომერი და კიკერი,
+ * მარჯვნივ დიდი სათაური. ვიწრო კონტეინერში თავისით ლაგდება ერთ სვეტად.
+ */
 export function SectionHeading({
   kicker,
   title,
   lead,
-  align = "start",
+  index,
   id,
+  stacked = false,
 }: {
   kicker?: string;
   title: string;
   lead?: string;
+  /** სექციის ნომერი — „01“ */
+  index?: string;
+  /** @deprecated სათაურები ყოველთვის მარცხნივაა; შენარჩუნებულია თავსებადობისთვის */
   align?: "start" | "center";
   id?: string;
+  /** ერთ სვეტად, განურჩევლად სიგანისა */
+  stacked?: boolean;
 }) {
   return (
-    <header
-      className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}
-      data-reveal="up"
-    >
-      {kicker && <Eyebrow>{kicker}</Eyebrow>}
-      <h2 id={id} className="mt-2 text-balance text-[clamp(1.6rem,3.4vw,2.4rem)]">
-        {title}
-      </h2>
-      {lead && (
-        <p className="mt-3 text-pretty text-[15px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
-          {lead}
-        </p>
+    <header className="@container" data-reveal="up">
+      <div className={stacked ? "grid gap-3" : "grid gap-3 @3xl:grid-cols-12 @3xl:gap-8"}>
+        {(kicker || index) && (
+          <div className={stacked ? "" : "@3xl:col-span-4 @3xl:pt-3"}>
+            <p className="eyebrow">
+              {index && <span className="num" style={{ color: "var(--fg)" }}>{index}</span>}
+              {kicker}
+            </p>
+          </div>
+        )}
+        <div className={stacked ? "" : kicker || index ? "@3xl:col-span-8" : "@3xl:col-span-12"}>
+          <h2 id={id} className="max-w-[22ch] text-balance text-[clamp(2rem,4.4vw,3.6rem)] leading-[1.02] tracking-[-0.045em]">
+            <Stop text={title} />
+          </h2>
+          {lead && (
+            <p className="mt-4 max-w-[58ch] text-pretty text-[16px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+              {lead}
+            </p>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/**
+ * გვერდის სათაური — „თავები. ისწავლე თანმიმდევრობით.“ დიდი, მკვრივი
+ * h1 მარცხნივ, განმარტება კი ქვემოთ მარჯვნივ, ბაზისურ ხაზზე.
+ */
+export function PageHeading({
+  kicker,
+  title,
+  tagline,
+  lead,
+  children,
+}: {
+  kicker?: string;
+  title: string;
+  tagline?: string;
+  lead?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <header className="grid gap-6 pb-2 pt-4 lg:grid-cols-12 lg:items-end lg:gap-10 lg:pt-8">
+      <div className="lg:col-span-8 xl:col-span-9">
+        {kicker && (
+          <p className="eyebrow mb-5" data-reveal="down">
+            {kicker}
+          </p>
+        )}
+        <h1 className="display text-balance text-[clamp(2.6rem,5.2vw,5rem)]" data-reveal="up">
+          <Stop text={title} />
+          {tagline && (
+            <>
+              {" "}
+              <span style={{ color: "var(--fg-faint)" }}>
+                <Stop text={tagline} />
+              </span>
+            </>
+          )}
+        </h1>
+      </div>
+      {(lead || children) && (
+        <div className="lg:col-span-4 lg:pb-2 xl:col-span-3" data-reveal="up" data-reveal-delay="120">
+          {lead && (
+            <p className="max-w-[46ch] text-pretty text-[15.5px] leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+              {lead}
+            </p>
+          )}
+          {children}
+        </div>
       )}
     </header>
   );
@@ -93,20 +173,22 @@ export function Callout({ data }: { data: CalloutType }) {
   const Icon = s.icon;
   return (
     <aside
-      className="my-7 rounded-[var(--radius-card)] border-l-4 p-5"
-      style={{ background: s.bg, borderColor: s.fg }}
+      className="my-8 grid gap-x-5 gap-y-2 rounded-[var(--radius-card)] p-6 sm:grid-cols-[120px_1fr]"
+      style={{ background: s.bg }}
       data-reveal="up"
     >
-      <div className="flex items-center gap-2" style={{ color: s.fg }}>
-        <Icon className="size-4 shrink-0" strokeWidth={1.9} aria-hidden="true" />
-        <span className="text-[11px] font-bold uppercase tracking-wider">{s.label}</span>
+      <div className="flex items-center gap-2 self-start sm:pt-1" style={{ color: s.fg }}>
+        <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden="true" />
+        <span className="text-[12px] font-bold">{s.label}</span>
       </div>
-      <p className="mt-2 font-serif text-[17px] font-semibold leading-snug" style={{ color: "var(--color-ink)" }}>
+      <div>
+      <p className="text-[18px] font-bold leading-snug tracking-[-0.02em]" style={{ color: "var(--color-ink)" }}>
         {data.title}
       </p>
       <p className="mt-1.5 text-[14.5px] leading-relaxed" style={{ color: "var(--color-ink-2)" }}>
         {data.text}
       </p>
+      </div>
     </aside>
   );
 }
@@ -180,19 +262,15 @@ export function CTA({
   cursor?: string;
 }) {
   const base =
-    "focus-ring inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium transition-all duration-300";
-  const styles: Record<string, React.CSSProperties> = {
-    solid: { background: "var(--brand)", color: "#fff" },
-    outline: { border: "1px solid var(--line-strong)", color: "var(--fg)" },
-    ghost: { color: "var(--brand)" },
+    "focus-ring group/cta inline-flex items-center justify-center gap-2 text-[14.5px] font-semibold transition-all duration-300";
+  const variants: Record<string, string> = {
+    solid: "rounded-full px-5 py-3 bg-[var(--fg)] text-[var(--bg)] hover:bg-[var(--hot)] hover:text-white",
+    outline:
+      "rounded-full border border-[var(--line-strong)] px-5 py-3 text-[var(--fg)] hover:border-[var(--fg)] hover:bg-[var(--bg-raised)]",
+    ghost: "ink-link px-0.5 py-1 text-[var(--fg)]",
   };
   return (
-    <Link
-      href={href}
-      className={`${base} ${variant === "solid" ? "hover:opacity-88 hover:-translate-y-0.5" : "hover:bg-[var(--brand-wash)]"} ${className}`}
-      style={styles[variant]}
-      data-cursor={cursor}
-    >
+    <Link href={href} className={`${base} ${variants[variant]} ${className}`} data-cursor={cursor}>
       {children}
     </Link>
   );
@@ -204,7 +282,7 @@ export function Stat({
   value,
   label,
   sub,
-  accent = "var(--brand)",
+  accent = "var(--fg)",
 }: {
   value: string;
   label: string;
@@ -212,13 +290,13 @@ export function Stat({
   accent?: string;
 }) {
   return (
-    <div className="card p-5" data-reveal="up">
-      <p className="font-serif text-[clamp(1.8rem,4vw,2.6rem)] font-bold leading-none" style={{ color: accent }}>
+    <div className="border-t pt-5" style={{ borderColor: "var(--line-strong)" }} data-reveal="up">
+      <p className="display text-[clamp(2.6rem,5.4vw,4.4rem)]" style={{ color: accent }}>
         {value}
       </p>
-      <p className="mt-2 text-sm font-semibold">{label}</p>
+      <p className="mt-3 text-[14px] font-semibold">{label}</p>
       {sub && (
-        <p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--fg-faint)" }}>
+        <p className="mt-0.5 text-[13px] leading-relaxed" style={{ color: "var(--fg-faint)" }}>
           {sub}
         </p>
       )}

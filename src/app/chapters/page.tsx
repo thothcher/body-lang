@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ChapterBrowser from "@/components/ui/ChapterBrowser";
-import { SectionHeading } from "@/components/ui/Primitives";
+import { PageHeading } from "@/components/ui/Primitives";
 import { CHAPTERS, TOTAL_MINUTES } from "@/lib/content/chapters";
 import { GESTURES } from "@/lib/content/gestures";
 import { breadcrumbJsonLd, courseJsonLd, JsonLd } from "@/lib/seo";
@@ -26,9 +26,10 @@ export default function ChaptersPage() {
         ])}
       />
 
-      <SectionHeading
+      <PageHeading
         kicker={`${CHAPTERS.length} თავი · ${TOTAL_MINUTES} წუთი · ${GESTURES.length} ჟესტი`}
-        title="სრული სასწავლო მასალა"
+        title="თავები"
+        tagline="საფუძვლებიდან პრაქტიკამდე"
         lead="თავები თანმიმდევრობითაა დალაგებული — საფუძვლებიდან პრაქტიკამდე. ქვემოთ კი ჟესტების ბიბლიოთეკაა, სადაც სხეულის ნაწილისა და ტონის მიხედვით ფილტრავ."
       />
 

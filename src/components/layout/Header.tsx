@@ -3,37 +3,35 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BookOpen,
-  Box,
-  ChartLine,
-  ClipboardCheck,
-  Gamepad2,
-  Menu,
-  PersonStanding,
-  ScanEye,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import SearchDialog from "./SearchDialog";
+import { useProgress } from "@/lib/progress";
 
-const NAV: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: "/chapters", label: "თავები", icon: BookOpen },
-  { href: "/test", label: "ტესტი", icon: ClipboardCheck },
-  { href: "/games", label: "თამაშები", icon: Gamepad2 },
-  { href: "/studio", label: "3D სტუდია", icon: Box },
-  { href: "/reader", label: "წაკითხვა", icon: ScanEye },
+const NAV: { href: string; label: string }[] = [
+  { href: "/chapters", label: "თავები" },
+  { href: "/test", label: "ტესტი" },
+  { href: "/games", label: "თამაშები" },
+  { href: "/studio", label: "3D სტუდია" },
+  { href: "/reader", label: "წაკითხვა" },
 ];
+
+export function Wordmark({ className = "" }: { className?: string }) {
+  return (
+    <span className={`font-serif font-extrabold tracking-[-0.04em] ${className}`}>
+      სხეულის ენა<span className="dot">.</span>
+    </span>
+  );
+}
 
 export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const { state, ready } = useProgress();
+  const readCount = ready ? state.read.length : 0;
 
   React.useEffect(() => {
-    // სქროლის საწყისი მდგომარეობა კლიენტზე
-     
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -46,103 +44,119 @@ export default function Header() {
     setOpen(false);
   }, [pathname]);
 
+  React.useEffect(() => {
+    document.documentElement.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [open]);
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+
   return (
     <header
-      className="sticky top-0 z-[100] transition-all duration-300"
+      className="sticky top-0 z-[100] transition-[background,border-color,backdrop-filter] duration-300"
       style={{
-        background: scrolled ? "color-mix(in srgb, var(--bg) 82%, transparent)" : "transparent",
-        backdropFilter: scrolled ? "blur(14px) saturate(1.4)" : "none",
+        background: scrolled || open ? "var(--glass)" : "transparent",
+        backdropFilter: scrolled || open ? "blur(18px) saturate(1.6)" : "none",
+        WebkitBackdropFilter: scrolled || open ? "blur(18px) saturate(1.6)" : "none",
         borderBottom: `1px solid ${scrolled ? "var(--line)" : "transparent"}`,
       }}
     >
-      <nav className="shell flex h-16 items-center justify-between gap-4" aria-label="მთავარი ნავიგაცია">
-        <Link href="/" className="focus-ring group flex items-center gap-2.5" data-cursor="მთავარი">
-          <span
-            className="grid size-9 place-items-center rounded-xl transition-transform duration-300 group-hover:rotate-6"
-            style={{ background: "var(--brand)" }}
-          >
-            <PersonStanding className="size-5" color="#fff" strokeWidth={2} aria-hidden="true" />
-          </span>
-          <span className="whitespace-nowrap leading-tight">
-            <span className="block font-serif text-[15px] font-semibold">სხეულის ენა</span>
-            <span className="block text-[10px] tracking-wide lg:hidden xl:block" style={{ color: "var(--fg-faint)" }}>
-              ალან პიზის მიხედვით
-            </span>
+      <nav className="shell flex h-[68px] items-center justify-between gap-4" aria-label="მთავარი ნავიგაცია">
+        <Link href="/" className="focus-ring flex items-baseline gap-3" data-cursor="მთავარი">
+          <Wordmark className="text-[21px] leading-none" />
+          <span className="hidden text-[11.5px] 2xl:inline" style={{ color: "var(--fg-faint)" }}>
+            ალან პიზის მიხედვით
           </span>
         </Link>
 
-        <div className="hidden items-center gap-1 lg:flex">
+        <div
+          className="glass absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 rounded-full p-1 lg:flex"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
           {NAV.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(item.href + "/");
-            const Icon = item.icon;
+            const active = isActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="focus-ring group relative flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm transition-colors hover:text-[var(--brand)] xl:px-3.5"
+                className="focus-ring whitespace-nowrap rounded-full px-4 py-[7px] text-[13.5px] font-medium transition-colors duration-200"
                 style={{
-                  color: active ? "var(--brand)" : "var(--fg-muted)",
-                  background: active ? "var(--brand-wash)" : "transparent",
+                  color: active ? "var(--bg)" : "var(--fg-muted)",
+                  background: active ? "var(--fg)" : "transparent",
                 }}
                 aria-current={active ? "page" : undefined}
               >
-                <Icon
-                  className="hidden size-4 transition-transform duration-300 group-hover:-translate-y-px xl:block"
-                  strokeWidth={active ? 2.2 : 1.8}
-                  aria-hidden="true"
-                />
                 {item.label}
               </Link>
             );
           })}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <SearchDialog />
           <ThemeToggle />
           <Link
             href="/progress"
-            className="focus-ring hidden items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-opacity hover:opacity-85 sm:flex xl:px-3.5"
-            style={{ background: "var(--brand)", color: "#fff" }}
+            className="focus-ring hidden items-center gap-2 whitespace-nowrap rounded-full py-1.5 pl-3.5 pr-1.5 text-[13px] font-medium transition-opacity hover:opacity-85 sm:flex"
+            style={{ background: "var(--fg)", color: "var(--bg)" }}
             data-cursor="პროგრესი"
-            aria-label="ჩემი პროგრესი"
+            aria-label={`ჩემი პროგრესი — წაკითხულია ${readCount} თავი`}
           >
-            <ChartLine className="size-4" strokeWidth={2} aria-hidden="true" />
-            <span className="lg:hidden xl:inline">პროგრესი</span>
+            პროგრესი
+            <span
+              className="num grid h-6 min-w-8 place-items-center rounded-full px-1.5 text-[11.5px] font-semibold"
+              style={{ background: "var(--hot)", color: "#fff" }}
+            >
+              {String(readCount).padStart(2, "0")}
+            </span>
           </Link>
           <button
             type="button"
             className="focus-ring grid size-9 place-items-center rounded-full border lg:hidden"
-            style={{ borderColor: "var(--line)" }}
+            style={{ borderColor: "var(--line-strong)" }}
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
+            aria-controls="mobile-menu"
             aria-label={open ? "მენიუს დახურვა" : "მენიუს გახსნა"}
           >
-            {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+            {open ? <X className="size-[18px]" aria-hidden="true" /> : <Menu className="size-[18px]" aria-hidden="true" />}
           </button>
         </div>
       </nav>
 
       {open && (
-        <div className="border-t lg:hidden" style={{ background: "var(--bg-raised)" }}>
-          <div className="shell grid gap-1 py-3">
-            {[...NAV, { href: "/progress", label: "ჩემი პროგრესი", icon: ChartLine }].map((item) => {
-              const Icon = item.icon;
-              const active = pathname === item.href || pathname.startsWith(item.href + "/");
+        <div
+          id="mobile-menu"
+          className="fixed inset-x-0 bottom-0 top-[68px] overflow-y-auto lg:hidden"
+          style={{ background: "var(--bg)" }}
+        >
+          <ol className="shell grid pb-10 pt-4">
+            {[...NAV, { href: "/progress", label: "ჩემი პროგრესი" }].map((item, i) => {
+              const active = isActive(item.href);
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="focus-ring flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] transition-colors hover:bg-[var(--bg-sunken)]"
-                  style={{ color: active ? "var(--brand)" : undefined }}
-                  aria-current={active ? "page" : undefined}
-                >
-                  <Icon className="size-[18px]" strokeWidth={1.8} style={{ color: "var(--brand)" }} aria-hidden="true" />
-                  {item.label}
-                </Link>
+                <li key={item.href} className="border-b" style={{ borderColor: "var(--line)" }}>
+                  <Link
+                    href={item.href}
+                    className="focus-ring group flex items-baseline gap-4 py-4"
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <span className="num w-7 text-[12px]" style={{ color: "var(--fg-faint)" }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className="display flex-1 text-[clamp(2rem,9vw,3rem)]"
+                      style={{ color: active ? "var(--hot)" : "var(--fg)" }}
+                    >
+                      {item.label}
+                    </span>
+                    <ArrowUpRight className="size-5 self-center" strokeWidth={1.6} style={{ color: "var(--fg-faint)" }} aria-hidden="true" />
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       )}
     </header>

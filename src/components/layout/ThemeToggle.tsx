@@ -49,8 +49,8 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={cycle}
-      className="focus-ring grid size-9 place-items-center rounded-full border transition-colors hover:bg-[var(--brand-wash)]"
-      style={{ borderColor: "var(--line)" }}
+      className="focus-ring grid size-9 place-items-center rounded-full border transition-colors hover:bg-[var(--bg-raised)]"
+      style={{ borderColor: "var(--line-strong)" }}
       aria-label={`თემა: ${label}. შესაცვლელად დააჭირე`}
       title={`თემა — ${label}`}
       data-cursor="თემა"

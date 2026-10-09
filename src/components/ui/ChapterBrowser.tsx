@@ -55,18 +55,13 @@ export default function ChapterBrowser() {
   const readCount = ready ? state.read.length : 0;
   const pct = CHAPTERS.length ? readCount / CHAPTERS.length : 0;
 
-  const chipStyle = (active: boolean): React.CSSProperties => ({
-    background: active ? "var(--brand)" : "var(--bg-raised)",
-    color: active ? "#fff" : "var(--fg-muted)",
-    borderColor: active ? "var(--brand)" : "var(--line)",
-  });
 
   return (
     <>
       {/* --- ძიება და პროგრესი --- */}
-      <div className="card sticky top-[72px] z-40 mt-8 p-4 backdrop-blur" style={{ background: "color-mix(in srgb, var(--bg-raised) 90%, transparent)" }}>
+      <div className="glass sticky top-[76px] z-40 mt-10 rounded-[22px] p-2.5">
         <div className="flex flex-wrap items-center gap-3">
-          <label className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-full border px-4 py-2.5" style={{ borderColor: "var(--line)" }}>
+          <label className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-[14px] px-4 py-2.5" style={{ background: "var(--bg-raised)" }}>
             <Search className="size-4 shrink-0" strokeWidth={1.9} style={{ color: "var(--fg-faint)" }} aria-hidden="true" />
             <input
               value={q}
@@ -103,10 +98,10 @@ export default function ChapterBrowser() {
 
       {/* --- თავები --- */}
       <section className="mt-10" aria-labelledby="ch-heading">
-        <h2 id="ch-heading" className="text-[22px]">
-          თავები{" "}
-          <span className="text-[15px] font-normal" style={{ color: "var(--fg-faint)" }}>
-            ({chapters.length})
+        <h2 id="ch-heading" className="flex items-baseline gap-3 text-[clamp(1.6rem,3vw,2.4rem)] tracking-[-0.04em]">
+          თავები<span className="dot -ml-3">.</span>
+          <span className="num text-[14px] font-normal tracking-normal" style={{ color: "var(--fg-faint)" }}>
+            {String(chapters.length).padStart(2, "0")}
           </span>
         </h2>
         {chapters.length === 0 ? (
@@ -114,7 +109,7 @@ export default function ChapterBrowser() {
             ამ ძიებაზე თავი ვერ მოიძებნა.
           </p>
         ) : (
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {chapters.map((c, i) => (
               <ChapterCard key={c.slug} chapter={c} index={i} />
             ))}
@@ -123,20 +118,19 @@ export default function ChapterBrowser() {
       </section>
 
       {/* --- ჟესტების ბიბლიოთეკა --- */}
-      <section className="mt-16" aria-labelledby="g-heading">
+      <section className="mt-24" aria-labelledby="g-heading">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 id="g-heading" className="text-[22px]">
-            ჟესტების ბიბლიოთეკა{" "}
-            <span className="text-[15px] font-normal" style={{ color: "var(--fg-faint)" }}>
-              ({gestures.length})
+          <h2 id="g-heading" className="flex items-baseline gap-3 text-[clamp(1.6rem,3vw,2.4rem)] tracking-[-0.04em]">
+            ჟესტების ბიბლიოთეკა<span className="dot -ml-3">.</span>
+            <span className="num text-[14px] font-normal tracking-normal" style={{ color: "var(--fg-faint)" }}>
+              {String(gestures.length).padStart(2, "0")}
             </span>
           </h2>
           {ready && state.saved.length > 0 && (
             <button
               type="button"
               onClick={() => setOnlySaved((v) => !v)}
-              className="focus-ring rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors"
-              style={chipStyle(onlySaved)}
+              className="focus-ring chip"
               aria-pressed={onlySaved}
             >
               ★ შენახული ({state.saved.length})
@@ -150,8 +144,8 @@ export default function ChapterBrowser() {
             <button
               type="button"
               onClick={() => setPart("all")}
-              className="focus-ring rounded-full border px-3 py-1.5 text-[12.5px] transition-colors"
-              style={chipStyle(part === "all")}
+              className="focus-ring chip"
+              aria-pressed={part === "all"}
             >
               ყველა
             </button>
@@ -160,8 +154,8 @@ export default function ChapterBrowser() {
                 key={p}
                 type="button"
                 onClick={() => setPart(p)}
-                className="focus-ring rounded-full border px-3 py-1.5 text-[12.5px] transition-colors"
-                style={chipStyle(part === p)}
+                className="focus-ring chip"
+                aria-pressed={part === p}
               >
                 {PART_LABEL[p]}
               </button>
@@ -173,8 +167,8 @@ export default function ChapterBrowser() {
             <button
               type="button"
               onClick={() => setTone("all")}
-              className="focus-ring rounded-full border px-3 py-1.5 text-[12.5px] transition-colors"
-              style={chipStyle(tone === "all")}
+              className="focus-ring chip"
+              aria-pressed={tone === "all"}
             >
               ყველა
             </button>
@@ -183,8 +177,8 @@ export default function ChapterBrowser() {
                 key={t}
                 type="button"
                 onClick={() => setTone(t)}
-                className="focus-ring rounded-full border px-3 py-1.5 text-[12.5px] transition-colors"
-                style={chipStyle(tone === t)}
+                className="focus-ring chip"
+                aria-pressed={tone === t}
               >
                 {TONE_LABEL[t]}
               </button>

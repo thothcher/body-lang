@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ProgressClient from "@/components/progress/ProgressClient";
-import { SectionHeading } from "@/components/ui/Primitives";
+import { PageHeading } from "@/components/ui/Primitives";
 import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -20,9 +20,10 @@ export default function ProgressPage() {
           { name: "ჩემი პროგრესი", href: "/progress" },
         ])}
       />
-      <SectionHeading
+      <PageHeading
         kicker="შენახული ბრაუზერში"
-        title="ჩემი პროგრესი"
+        title="პროგრესი"
+        tagline="ყველაფერი, რაც გააკეთე"
         lead="აქ ყველაფერი ჩანს, რაც აქამდე გააკეთე. არაფერი იგზავნება სერვერზე — მონაცემები მხოლოდ ამ მოწყობილობაზე რჩება."
       />
       <ProgressClient />

@@ -54,12 +54,12 @@ export const TONE_LABEL: Record<Tone, string> = {
 };
 
 export const TONE_COLOR: Record<Tone, { fg: string; bg: string; dot: string }> = {
-  open: { fg: "var(--color-sage)", bg: "var(--color-sage-wash)", dot: "#5f8672" },
-  closed: { fg: "var(--color-clay)", bg: "var(--color-clay-wash)", dot: "#b4634f" },
-  dominant: { fg: "var(--color-indigo)", bg: "var(--color-indigo-wash)", dot: "#4a5497" },
-  deceptive: { fg: "var(--color-amber)", bg: "var(--color-amber-wash)", dot: "#a97a2f" },
-  evaluating: { fg: "var(--color-indigo-deep)", bg: "var(--color-indigo-wash)", dot: "#39406f" },
-  neutral: { fg: "var(--color-slate-cool)", bg: "rgba(91,99,116,0.1)", dot: "#5b6374" },
+  open: { fg: "var(--color-sage)", bg: "var(--color-sage-wash)", dot: "var(--color-sage)" },
+  closed: { fg: "var(--color-clay)", bg: "var(--color-clay-wash)", dot: "var(--color-clay)" },
+  dominant: { fg: "var(--color-indigo)", bg: "var(--color-indigo-wash)", dot: "var(--color-indigo)" },
+  deceptive: { fg: "var(--color-amber)", bg: "var(--color-amber-wash)", dot: "var(--color-amber)" },
+  evaluating: { fg: "var(--color-violet)", bg: "var(--color-violet-wash)", dot: "var(--color-violet)" },
+  neutral: { fg: "var(--color-slate-cool)", bg: "color-mix(in srgb, var(--color-slate-cool) 12%, transparent)", dot: "var(--color-slate-cool)" },
 };
 
 export const PART_LABEL: Record<BodyPart, string> = {

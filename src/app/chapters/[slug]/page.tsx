@@ -68,11 +68,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ slug: 
       />
 
       {/* ============================ HERO ============================ */}
-      <header className="grain relative overflow-hidden pb-10 pt-8">
-        <div
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{ background: "radial-gradient(70% 60% at 30% 0%, var(--brand-wash), transparent 70%)" }}
-        />
+      <header className="relative pb-14 pt-6">
         <div className="shell">
           <nav aria-label="გზა" className="text-[12.5px]" style={{ color: "var(--fg-faint)" }}>
             <Link href="/" className="focus-ring hover:text-[var(--brand)]">
@@ -86,29 +82,30 @@ export default async function ChapterPage({ params }: { params: Promise<{ slug: 
             <span style={{ color: "var(--fg-muted)" }}>{ch.title}</span>
           </nav>
 
-          <div className="mt-6 grid items-center gap-8 lg:grid-cols-[1.35fr_1fr]">
-            <div>
+          <div className="mt-8 grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-12">
+            <div className="flex flex-col justify-end">
               <div className="flex flex-wrap items-center gap-2.5 text-[12px]" data-reveal="down">
                 <span
-                  className="rounded-full px-2.5 py-1 font-bold"
-                  style={{ background: "var(--brand)", color: "#fff" }}
+                  className="num rounded-full px-2.5 py-1 font-semibold"
+                  style={{ background: "var(--fg)", color: "var(--bg)" }}
                 >
-                  თავი {ch.order}
+                  {String(ch.order).padStart(2, "0")}
                 </span>
                 <span className="eyebrow">{ch.kicker}</span>
-                <span style={{ color: "var(--fg-faint)" }}>· {ch.minutes} წუთი</span>
+                <span className="num" style={{ color: "var(--fg-faint)" }}>· {ch.minutes} წთ</span>
               </div>
 
               <h1
-                className="mt-4 text-balance font-serif text-[clamp(2.1rem,5.4vw,3.4rem)] font-bold leading-[1.1]"
+                className="display mt-6 text-balance text-[clamp(2.6rem,6vw,5.4rem)]"
                 data-reveal="up"
                 data-reveal-delay="60"
               >
                 {ch.title}
+                <span className="dot">.</span>
               </h1>
               <p
-                className="mt-2 font-serif text-[clamp(1.05rem,2.2vw,1.4rem)]"
-                style={{ color: "var(--brand)" }}
+                className="mt-3 text-[clamp(1.15rem,2.2vw,1.6rem)] font-semibold leading-snug tracking-[-0.025em]"
+                style={{ color: "var(--fg-faint)" }}
                 data-reveal="up"
                 data-reveal-delay="110"
               >
@@ -126,13 +123,12 @@ export default async function ChapterPage({ params }: { params: Promise<{ slug: 
 
             {cover && (
               <figure
-                className="card grid place-items-center overflow-hidden py-6"
-                style={{ background: "var(--bg-sunken)" }}
+                className="stage relative grid min-h-[340px] place-items-center overflow-hidden py-8"
                 data-reveal="scale"
                 data-reveal-delay="180"
               >
-                <GestureFigure gesture={cover} className="h-64" />
-                <figcaption className="mt-2 text-[12.5px] font-medium" style={{ color: "var(--fg-faint)" }}>
+                <GestureFigure gesture={cover} className="h-72" />
+                <figcaption className="glass absolute bottom-4 left-4 rounded-full px-3 py-1.5 text-[12px] font-medium" style={{ color: "var(--fg-muted)" }}>
                   {cover.title}
                 </figcaption>
               </figure>
@@ -155,12 +151,12 @@ export default async function ChapterPage({ params }: { params: Promise<{ slug: 
             return (
               <section key={section.id} id={section.id} className="scroll-mt-24 pt-10 first:pt-2">
                 <h2
-                  className="text-[clamp(1.35rem,3vw,1.75rem)] leading-snug"
+                  className="text-[clamp(1.5rem,3vw,2.1rem)] leading-tight tracking-[-0.035em]"
                   data-reveal="up"
                 >
                   <span
-                    className="mr-2 font-sans text-[13px] font-bold"
-                    style={{ color: "var(--brand)", opacity: 0.6 }}
+                    className="num mr-3 align-middle text-[13px] font-normal tracking-normal"
+                    style={{ color: "var(--hot)" }}
                   >
                     {String(si + 1).padStart(2, "0")}
                   </span>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import TestHub from "@/components/quiz/TestHub";
-import { SectionHeading } from "@/components/ui/Primitives";
+import { PageHeading } from "@/components/ui/Primitives";
 import { ALL_QUESTIONS, TEST_TOPICS } from "@/lib/content/quiz";
 import { CHAPTERS } from "@/lib/content/chapters";
 import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
@@ -20,9 +20,10 @@ export default function TestIndexPage() {
           { name: "ტესტები", href: "/test" },
         ])}
       />
-      <SectionHeading
+      <PageHeading
         kicker={`${ALL_QUESTIONS.length} კითხვა · ${TEST_TOPICS.length} ბლოკი · ${CHAPTERS.length} თავი`}
-        title="შეამოწმე თავი"
+        title="ტესტები"
+        tagline="შეამოწმე თავი"
         lead="ყველა ტესტი ერთნაირად მუშაობს: პასუხის შემდეგ მაშინვე ხედავ ახსნას, ბოლოს კი — რა გასამეორებელი დაგრჩა. შედეგები შენს ბრაუზერში ინახება."
       />
       <TestHub />

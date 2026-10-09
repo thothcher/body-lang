@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_Georgian, Noto_Serif_Georgian } from "next/font/google";
+import { JetBrains_Mono, Noto_Sans_Georgian } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/layout/Header";
@@ -13,16 +13,16 @@ import { SITE } from "@/lib/seo";
 
 const sans = Noto_Sans_Georgian({
   subsets: ["georgian", "latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
   variable: "--font-noto-sans-georgian",
 });
 
-const serif = Noto_Serif_Georgian({
-  subsets: ["georgian", "latin"],
-  weight: ["500", "600", "700"],
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
-  variable: "--font-noto-serif-georgian",
+  variable: "--font-mono-latin",
 });
 
 export const metadata: Metadata = {
@@ -71,8 +71,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f3ec" },
-    { media: "(prefers-color-scheme: dark)", color: "#12141a" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#08090c" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -81,7 +81,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ka" dir="ltr" className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
+    <html lang="ka" dir="ltr" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a
           href="#main"
           className="focus-ring sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300] focus:rounded-lg focus:px-4 focus:py-2"
-          style={{ background: "var(--brand)", color: "#fff" }}
+          style={{ background: "var(--fg)", color: "var(--bg)" }}
         >
           მთავარ შიგთავსზე გადასვლა
         </a>
